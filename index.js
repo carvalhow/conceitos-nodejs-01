@@ -12,3 +12,7 @@ server.post("/projects", (req, res) => {
 
   return res.json(projects);
 });
+
+server.get("/projects", (req, res) => {
+  return res.json(projects);
+});
