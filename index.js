@@ -22,11 +22,24 @@ server.get("/projects", (req, res) => {
 //Update
 server.put("/projects/:id", (req, res) => {
   const id = req.params.id;
-  const newTitle = req.body;
+  const newTitle = req.body.title;
 
   projects.filter(d => {
     if (d.id == id) {
       d.title = newTitle;
+    }
+  });
+
+  return res.json(projects);
+});
+
+//Delete
+server.delete("/projects/:id", (req, res) => {
+  const id = req.params.id;
+
+  projects.filter(d => {
+    if (d.id == id) {
+      projects.splice(projects.indexOf(d), 1);
     }
   });
 
