@@ -7,11 +7,17 @@ const projects = [];
 
 //Create
 server.post("/projects", (req, res) => {
-  const project = req.body;
+  const { id, title } = req.body;
+
+  const project = {
+    id,
+    title,
+    tasks: []
+  };
 
   projects.push(project);
 
-  return res.json(projects);
+  return res.json(project);
 });
 
 //Read
@@ -21,8 +27,8 @@ server.get("/projects", (req, res) => {
 
 //Update
 server.put("/projects/:id", (req, res) => {
-  const id = req.params.id;
-  const newTitle = req.body.title;
+  const { id } = req.params;
+  const { title } = req.body;
 
   projects.filter(d => {
     if (d.id == id) {
@@ -35,7 +41,7 @@ server.put("/projects/:id", (req, res) => {
 
 //Delete
 server.delete("/projects/:id", (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
 
   projects.filter(d => {
     if (d.id == id) {
@@ -43,5 +49,16 @@ server.delete("/projects/:id", (req, res) => {
     }
   });
 
-  return res.json(projects);
+  return res.send();
+});
+
+//Create Tasks
+server.post("/projects/:id/tasks", (req, res) => {
+  const { id } = req.params;
+  const { title } = req.body;
+  const { project } = projects.find(d => d.id == id);
+
+  projects.task.push(title);
+
+  return res.json(project);
 });
