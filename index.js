@@ -1,20 +1,17 @@
 const express = require("express");
 const server = express();
 server.use(express.json());
-server.listen(3001);
 
 const projects = [];
 
 function validarIdExistente(req, res, next) {
-  const { projeto } = projetos.filter(d => {
-    if (d.id == req.params.id) {
-      return d;
-    }
-  });
+  const projeto = projects.find(d => d.id == req.params.id);
 
   if (projeto) {
     return next();
   }
+
+  return res.status(400).json({ error: "ID inexistente" });
 }
 
 //Create
@@ -38,7 +35,7 @@ server.get("/projects", (req, res) => {
 });
 
 //Update
-server.put("/projects/:id", (req, res) => {
+server.put("/projects/:id", validarIdExistente, (req, res) => {
   const { id } = req.params;
   const { title } = req.body;
 
@@ -52,7 +49,7 @@ server.put("/projects/:id", (req, res) => {
 });
 
 //Delete
-server.delete("/projects/:id", (req, res) => {
+server.delete("/projects/:id", validarIdExistente, (req, res) => {
   const { id } = req.params;
 
   projects.filter(d => {
@@ -65,13 +62,13 @@ server.delete("/projects/:id", (req, res) => {
 });
 
 //Create Tasks
-server.post("/projects/:id/tasks", (req, res) => {
+server.post("/projects/:id/tasks", validarIdExistente, (req, res) => {
   const { id } = req.params;
   const { title } = req.body;
   const project = projects.find(d => d.id == id);
 
-  if (project) {
-    project.tasks.push(title);
-    return res.json(project);
-  }
+  project.tasks.push(title);
+  return res.json(project);
 });
+
+server.listen(3001);
