@@ -5,6 +5,18 @@ server.listen(3001);
 
 const projects = [];
 
+function validarIdExistente(req, res, next) {
+  const { projeto } = projetos.filter(d => {
+    if (d.id == req.params.id) {
+      return d;
+    }
+  });
+
+  if (projeto) {
+    return next();
+  }
+}
+
 //Create
 server.post("/projects", (req, res) => {
   const { id, title } = req.body;
@@ -56,9 +68,10 @@ server.delete("/projects/:id", (req, res) => {
 server.post("/projects/:id/tasks", (req, res) => {
   const { id } = req.params;
   const { title } = req.body;
-  const { project } = projects.find(d => d.id == id);
+  const project = projects.find(d => d.id == id);
 
-  projects.task.push(title);
-
-  return res.json(project);
+  if (project) {
+    project.tasks.push(title);
+    return res.json(project);
+  }
 });
