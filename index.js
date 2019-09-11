@@ -3,6 +3,7 @@ const server = express();
 server.use(express.json());
 
 const projects = [];
+let numberReqs = 0;
 
 function validarIdExistente(req, res, next) {
   const projeto = projects.find(d => d.id == req.params.id);
@@ -13,6 +14,14 @@ function validarIdExistente(req, res, next) {
 
   return res.status(400).json({ error: "ID inexistente" });
 }
+
+function countReqs(req, res, next) {
+  numberReqs++;
+  console.log(`Requisições: ${numberReqs}`);
+  return next();
+}
+
+server.use(countReqs);
 
 //Create
 server.post("/projects", (req, res) => {
